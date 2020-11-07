@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import bcrypt from 'bcryptjs';
+import { hash } from 'bcryptjs';
 import * as Yup from 'yup';
 import User from '../models/User';
 
@@ -21,7 +21,7 @@ export default {
       }
 
       return response.json({
-        user,
+        user: { ...user, password: undefined },
         token: user.generateToken(),
       });
     } catch (err) {
@@ -42,7 +42,7 @@ export default {
         return response.status(400).json({ error: 'User already exists' });
       }
 
-      const passwordHash = await bcrypt.hash(password, 8);
+      const passwordHash = await hash(password, 8);
 
       const data = {
         username,
@@ -66,7 +66,7 @@ export default {
 
       await userRepository.save(user);
 
-      return response.json(user);
+      return response.json({ ...user, password: undefined });
     } catch (err) {
       return response
         .status(400)

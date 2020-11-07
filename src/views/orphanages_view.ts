@@ -3,7 +3,7 @@ import ImagesView from './images_view';
 
 /* eslint-disable camelcase */
 interface ViewObject {
-  id: number;
+  id: string;
   name: string;
   latitude: number;
   longitude: number;
@@ -12,7 +12,7 @@ interface ViewObject {
   opening_hours: string;
   open_on_weekends: boolean;
   images: {
-    id: number;
+    id: string;
     url: string;
   }[];
 }

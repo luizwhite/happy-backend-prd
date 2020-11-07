@@ -4,14 +4,16 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import Image from './Image';
 
 /* eslint-disable camelcase */
 @Entity('orphanages')
 export default class Orphanage {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -33,6 +35,12 @@ export default class Orphanage {
 
   @Column()
   open_on_weekends: boolean;
+
+  @CreateDateColumn()
+  created_at: Date; // eslint-disable-line camelcase
+
+  @UpdateDateColumn()
+  updated_at: Date; // eslint-disable-line camelcase
 
   @OneToMany(() => Image, (image) => image.orphanage, {
     cascade: ['insert', 'update'],

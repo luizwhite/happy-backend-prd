@@ -1,11 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
+
+import authConfig from '../config/auth';
 
 @Entity('users')
 export default class User {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   username: string;
@@ -19,13 +27,21 @@ export default class User {
   @Column()
   admin: boolean;
 
+  @CreateDateColumn()
+  created_at: Date; // eslint-disable-line camelcase
+
+  @UpdateDateColumn()
+  updated_at: Date; // eslint-disable-line camelcase
+
   compareHash(hash: string): Promise<boolean> {
-    return bcrypt.compare(hash, this.password);
+    return compare(hash, this.password);
   }
 
   generateToken(): string {
-    return jwt.sign({ id: this.id }, 'secret', {
-      expiresIn: 86400,
+    const { secret, expiresIn } = authConfig.jwt;
+
+    return sign({ id: this.id }, secret, {
+      expiresIn,
     });
   }
 }

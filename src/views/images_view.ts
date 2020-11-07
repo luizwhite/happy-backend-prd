@@ -1,7 +1,7 @@
 import Image from '../models/Image';
 
 interface ViewObject {
-  id: number;
+  id: string;
   url: string;
 }
 
