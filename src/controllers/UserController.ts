@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import User from '../models/User';
 import bcrypt from 'bcryptjs';
 import * as Yup from 'yup';
+import User from '../models/User';
 
 export default {
-  async authUser(request: Request, response: Response) {
+  async authUser(request: Request, response: Response): Promise<Response> {
     try {
       const { email, password } = request.body;
 
@@ -31,7 +31,8 @@ export default {
     }
   },
 
-  async registerUser(request: Request, response: Response) {
+  async registerUser(request: Request, response: Response): Promise<Response> {
+    // eslint-disable-next-line object-curly-newline
     const { username, email, password, admin } = request.body;
 
     try {

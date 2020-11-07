@@ -1,15 +1,19 @@
 import Image from '../models/Image';
 
+interface ViewObject {
+  id: number;
+  url: string;
+}
+
 export default {
-  render(image: Image) {
+  render(image: Image): ViewObject {
     return {
       id: image.id,
-      // url: `http://${process.env.REACT_APP_NGROK3333}/uploads/${image.path}`
-      url: `${process.env.API_URL}/uploads/${image.path}`
-    }
+      url: `${process.env.API_URL}/uploads/${image.path}`,
+    };
   },
 
-  renderMany(images: Image[]) {
+  renderMany(images: Image[]): ViewObject[] {
     return images.map((image) => this.render(image));
-  }
+  },
 };

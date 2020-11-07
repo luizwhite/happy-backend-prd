@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate,  } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -18,14 +18,14 @@ export default class User {
 
   @Column()
   admin: boolean;
-  
-  compareHash(hash: string) {
+
+  compareHash(hash: string): Promise<boolean> {
     return bcrypt.compare(hash, this.password);
   }
 
-  generateToken() {
-    return jwt.sign({ id: this.id }, "secret", {
-      expiresIn: 86400
+  generateToken(): string {
+    return jwt.sign({ id: this.id }, 'secret', {
+      expiresIn: 86400,
     });
   }
 }
