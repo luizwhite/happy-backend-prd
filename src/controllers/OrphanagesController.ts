@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import * as Yup from 'yup';
+
+import AppError from '../errors/AppError';
 import Orphanage from '../models/Orphanage';
 import orphanageView from '../views/orphanages_view';
 
@@ -13,6 +15,21 @@ export default {
     });
 
     return response.json(orphanageView.renderMany(orphanages));
+  },
+
+  async delete(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+    const orphanagesRepository = getRepository(Orphanage);
+
+    const orphanage = await orphanagesRepository.findOne(id);
+
+    if (!orphanage) {
+      throw new AppError("Transaction informed doesn't exist!", 406);
+    }
+
+    await orphanagesRepository.delete(id);
+
+    return response.status(204).send();
   },
 
   async show(request: Request, response: Response): Promise<Response> {
