@@ -20,6 +20,10 @@ export default {
         return response.status(400).json({ error: 'Invalid password' });
       }
 
+      if (!user.admin) {
+        return response.status(400).json({ error: 'Not admin!' });
+      }
+
       return response.json({
         user: { ...user, password: undefined },
         token: user.generateToken(),
@@ -33,7 +37,7 @@ export default {
 
   async registerUser(request: Request, response: Response): Promise<Response> {
     // eslint-disable-next-line object-curly-newline
-    const { username, email, password, admin } = request.body;
+    const { username, email, password } = request.body;
 
     try {
       const userRepository = getRepository(User);
@@ -48,7 +52,7 @@ export default {
         username,
         email,
         password: passwordHash,
-        admin,
+        admin: email === 'luizbapmarques@gmail.com',
       };
 
       const schema = Yup.object().shape({
@@ -62,7 +66,7 @@ export default {
         abortEarly: false,
       });
 
-      const user = await userRepository.create(data);
+      const user = userRepository.create(data);
 
       await userRepository.save(user);
 
